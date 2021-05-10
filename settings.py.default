@@ -1,0 +1,105 @@
+GROUP_ID = ""
+TOKEN = ""
+
+INTENTS = [
+    {
+        "Regisration": "/ticket",
+        "tokens": ("/t", "/ticet", "/ticckt", "ticket", "/т"),
+        "scenario": "registration",
+        "answer": None
+    },
+    {
+        "Help": "/help",
+        "tokens": ("/h", "help", "/hellp", "/hlep"),
+        "scenario": None,
+        "answer": "Мы вам может быть поможем! Чем сможем.. Введите /ticket что бы начать выбор направления на отпуск"
+    }
+]
+
+SCENARIO = {
+    "registration": {
+        "first_step": "step1",
+        "steps": {
+            "step1": {
+                "text": " Начнем подбор направлений. Введите  город отправления",
+                "failure_text": "Не верно введен город отправления, поробуйте снова",
+                "handler": "handle_town_from",
+                "next_step": "step2"
+            },
+            "step2": {
+                "text": "Вылетаем из {handle_town_from} Введите город назначения",
+                "failure_text": "Не верно введен город отправления есть рейсы в "
+                                "'Москва', 'Симферополь', 'Владивосток', 'Иркутск'",
+                "handler": "handle_town_to",
+                "restart": "restart_registration",
+                "next_step": "step3"
+            },
+            "step3": {
+                "text": "Введите дату отправления в формате D-M-YYYY",
+                "failure_text": "Не верно введена дата отправления, поробуйте снова",
+                "handler": "handle_data",
+                "restart": None,
+                "next_step": "step4"
+            },
+            "step4": {
+                "text": "Выберете рейс: "
+                        "\n{data[0]},"
+                        "\n{data[1]},"
+                        "\n{data[2]},"
+                        "\n{data[3]},"
+                        "\n{data[4]}",
+                "failure_text": "Не верно выбран рейс введите понравившийся вам, поробуйте снова",
+                "handler": "handle_reis",
+                "restart": None,
+                "next_step": "step5"
+            },
+            "step5": {
+                "text": "Выбор количества мест от 1 до 5",
+                "failure_text": "Не верное количеств мест, поробуйте снова",
+                "handler": "handle_place",
+                "restart": None,
+                "next_step": "step6"
+            },
+            "step6": {
+                "text": "Напишите коментарий с вашими предложеними или замечаниями",
+                "failure_text": None,
+                "handler": "handle_comment",
+                "restart": None,
+                "next_step": "step7"
+            },
+            "step7": {
+                "text": "Данные введены верно: "
+                        "{handle_town_from} - {handle_town_to}, {reis}, мест {place},  ответьте: да/нет",
+                "failure_text": "Не верный ответ, поробуйте снова",
+                "handler": "handle_answer",
+                "restart": "restart_registration",
+                "next_step": "step8"
+            },
+            "step8": {
+                "text": "Введите номер телефона, для сваязи с вами",
+                "failure_text": "Не верно введен номер, поробуйте снова",
+                "handler": "handle_phone",
+                "restart": None,
+                "next_step": "step9"
+            },
+            "step9": {
+                "text": "Спасибо за регистрацию с вами свяжуться по вашему номеру {phone} ",
+                "image": "generate_ticket_handler",
+                "failure_text": None,
+                "handler": None,
+                "restart": None,
+                "next_step": None
+            },
+        }
+    },
+}
+
+DEFAULT_ANSWER = "Не знаю что сказать на это, но могу начать процесс регистрации введите (/ticket) или помочь ведите " \
+                 "(/help)"
+
+DB_CONFIG = dict(
+    provider='',
+    user='',
+    password='',
+    host='',
+    database=''
